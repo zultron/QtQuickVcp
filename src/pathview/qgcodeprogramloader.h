@@ -28,6 +28,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QUrl>
+#include <QTextStream>
 #include "qgcodeprogrammodel.h"
 
 class QGCodeProgramLoader : public QObject
@@ -37,7 +38,7 @@ class QGCodeProgramLoader : public QObject
     Q_PROPERTY(QString localPath READ localPath WRITE setLocalPath NOTIFY localPathChanged)
     Q_PROPERTY(QString remotePath READ remotePath WRITE setRemotePath NOTIFY remotePathChanged)
     Q_PROPERTY(QGCodeProgramModel *model READ model WRITE setModel NOTIFY modelChanged)
-    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(QString text READ text NOTIFY textChanged)
 
 public:
     explicit QGCodeProgramLoader(QObject *parent = 0);
@@ -75,19 +76,13 @@ signals:
     void modelChanged(QGCodeProgramModel * arg);
     void loadingFinished();
     void loadingFailed();
-    void error(QString message);
+    void savingFinished();
+    void savingFailed();
 
 public slots:
     void save(const QString &text);
     void saveAs(const QString &localFilePath, const QString &text);
     void load();
-
-    void setText(const QString &arg) {
-        if (m_text != arg) {
-            m_text = arg;
-            emit textChanged();
-        }
-    }
 
     void setLocalFilePath(QString arg)
     {
@@ -129,6 +124,8 @@ private:
     QString m_remotePath;
     QGCodeProgramModel * m_model;
     QString m_text;
+
+    void updateModel(const QString &remoteFilePath);
 };
 
 #endif // QGCODEPROGRAMLOADER_H

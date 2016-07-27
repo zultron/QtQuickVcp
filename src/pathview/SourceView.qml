@@ -39,11 +39,14 @@ Item {
     PathViewObject {
         id: object
         onGcodeEditModeChanged: {
-            if ((!object.gcodeEditMode) && (edit.text !== object.gcodeProgramLoader.text)) {
+            if ((!object.gcodeEditMode) && (edit.dirty)) {
                 // switching from edit-mode to read-mode
                 console.log("TODO: confirm before saving")
-                object.gcodeProgramLoader.save(edit.text)
-                object.core.file.startUpload()
+                object.gcodeProgramLoader.save(edit.text);
+                object.core.file.startUpload();
+            }
+            else {
+                edit.dirty = false;
             }
         }
     }
@@ -98,8 +101,9 @@ Item {
             }
 
             TextEdit {
+                property bool dirty: false
                 id: edit
-                text: object.gcodeProgramLoader.text
+                text: (object.gcodeProgramLoader.model) ? object.gcodeProgramLoader.text : ""
 
                 color: "#2B2C2E"
                 cursorVisible: activeFocus
@@ -112,6 +116,7 @@ Item {
                 selectionColor: Qt.rgba(1.0, 1.0, 0.0, 0.75)
                 selectedTextColor: Qt.rgba(0.0, 0.0, 0.0, 0.8)
                 selectByMouse: true
+                onTextChanged: dirty = true
             }
         }
     }

@@ -27,7 +27,8 @@ QGCodeProgramLoader::QGCodeProgramLoader(QObject *parent) :
     m_localFilePath(""),
     m_localPath(""),
     m_remotePath(""),
-    m_model(nullptr)
+    m_model(nullptr),
+    m_text("")
 {
 }
 
@@ -41,11 +42,13 @@ void QGCodeProgramLoader::saveAs(const QString &localFilePath, const QString &te
 {
     QFile f(localFilePath);
     if (!f.open(QFile::WriteOnly | QFile::Truncate | QFile::Text)) {
-        emit error(tr("Cannot save: ") + f.errorString());
+        emit savingFailed();
         return;
     }
     f.write(text.toLocal8Bit());
     f.close();
+
+    emit savingFinished();
 }
 
 void QGCodeProgramLoader::load()
@@ -78,25 +81,32 @@ void QGCodeProgramLoader::load()
         return;
     }
 
-    QString data = QString(file.readAll());
-    setText(data);
+    m_text = QString(file.readAll());
+    file.close();
+    emit textChanged();
 
+    updateModel(remoteFilePath);
+
+    emit loadingFinished();
+}
+
+void QGCodeProgramLoader::updateModel(const QString &remoteFilePath)
+{
     int lineNumber = 0;
-    lineNumber = data.count(QLatin1Char('\n')) + 1; // +1 for the last line
+    lineNumber = m_text.count(QLatin1Char('\n')) + 1; // +1 for the last line
 
     m_model->beginUpdate();
     m_model->prepareFile(remoteFilePath, lineNumber);
 
+    QTextStream textStream(&m_text, QIODevice::ReadOnly);
     lineNumber = 0;
-    file.reset();
-    while (!file.atEnd()) {
-        QByteArray line = file.readLine();
+    QString line;
+    while (textStream.readLineInto(&line))
+    {
         lineNumber++;
-        m_model->setData(remoteFilePath, lineNumber, QString(line), QGCodeProgramModel::GCodeRole);
+        m_model->setData(remoteFilePath, lineNumber, line, QGCodeProgramModel::GCodeRole);
+
     }
 
     m_model->endUpdate();
-
-    file.close();
-    emit loadingFinished();
 }
