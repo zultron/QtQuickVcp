@@ -30,8 +30,8 @@ ApplicationAction {
 
     id: root
     text: qsTr("Edit")
-    //iconName: "mode-edit-white"
-    iconSource: "qrc:Machinekit/Application/Controls/icons/mode-edit-white"
+    //iconName: "document-edit"
+    iconSource: "qrc:Machinekit/Application/Controls/icons/document-edit"
     shortcut: "F4"
     tooltip: qsTr("Edit current file [%1]").arg(shortcut)
     checkable: true

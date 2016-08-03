@@ -68,8 +68,6 @@
     <qresource prefix="/Machinekit/Application/Controls/icons">
         <file alias="process-stop">icons/process-stop.png</file>
         <file alias="system-shutdown">icons/system-shutdown.png</file>
-        <file alias="mode-edit-black">icons/mode-edit-black.png</file>
-        <file alias="mode-edit-white">icons/mode-edit-white.png</file>
         <file alias="document-open">icons/document-open.png</file>
         <file alias="dialog-cancel">icons/dialog-cancel.png</file>
         <file alias="dialog-error">icons/dialog-error.png</file>
@@ -81,5 +79,6 @@
         <file alias="go-stop">icons/go-stop.png</file>
         <file alias="view-refresh">icons/view-refresh.png</file>
         <file alias="machinekit">icons/machinekit.png</file>
+        <file alias="document-edit">icons/document-edit.png</file>
     </qresource>
 </RCC>
