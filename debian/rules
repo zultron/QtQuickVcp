@@ -9,9 +9,9 @@
 # Define DEB_HOST_MULTIARCH
 include /usr/share/dpkg/architecture.mk
 
-export CFLAGS := $(shell dpkg-buildflags --get CFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)
-export CXXFLAGS := $(shell dpkg-buildflags --get CXXFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)
-export LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS) -Wl,--as-needed
+# Define & export CFLAGS, CXXFLAGS, LDFLAGS
+include /usr/share/dpkg/buildflags.mk
+
 export QT_SELECT := qt5
 
 %:
