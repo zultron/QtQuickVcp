@@ -6,7 +6,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+# Define DEB_HOST_MULTIARCH
+include /usr/share/dpkg/architecture.mk
 
 export CFLAGS := $(shell dpkg-buildflags --get CFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)
 export CXXFLAGS := $(shell dpkg-buildflags --get CXXFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)
@@ -21,8 +22,10 @@ override_dh_auto_clean:
     # These are regenerated during the build
 	rm -f apps/MachinekitClient/MachinekitClient.ServiceDisplay/translations/*
 
-# override_dh_auto_install-arch:
-# 	dh_auto_install
+override_dh_auto_install-arch:
+        # Hack to pick up libs built in the '3rdparty' directory
+	dh_auto_install -- \
+	    LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$(CURDIR)/debian/qml-module-qtquick-vcp/usr/lib/$(DEB_HOST_MULTIARCH)
 
 # override_dh_install:
 # 	dh_install --fail-missing
