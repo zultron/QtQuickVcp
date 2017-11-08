@@ -19,7 +19,7 @@ export QT_SELECT := qt5
 
 override_dh_auto_clean:
 	dh_auto_clean
-    # These are regenerated during the build
+        # These are regenerated during the build
 	rm -f apps/MachinekitClient/MachinekitClient.ServiceDisplay/translations/*
 
 override_dh_auto_install-arch:
