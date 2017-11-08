@@ -123,6 +123,18 @@ matrix:
       script:
         - "./build/travis/job_macos/build.sh --upload-branches $MACOSX_UPLOAD_BRANCHES"
 
+    - env: "JOB=deb_x64"
+      cache: ccache
+      before_install:
+        - docker pull zultron/docker-dev:latest
+        - ccache -z
+      script:
+        - "./build/travis/job_deb_x64/build.sh -c deb"
+      after_success:
+        # Show ccache stats
+        - ccache -s
+
+
 notifications:
   email:
     recipients:
